@@ -31,6 +31,9 @@
 
 
 [Update Log]
+
 • v1.0 - Release Version
+
 • v1.1 - Bug Fixed
+
 • v1.2 - Bug Fixed (Now)
