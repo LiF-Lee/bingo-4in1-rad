@@ -26,6 +26,7 @@ const setting = { //게임 세팅
       [0, 0, 0, 0, 0, 0, 0]
    ]
 };
+
 function response(room, msg, sender, isGroupChat, replier, imageDB, packageName) {
    var command = msg.split(" ");
    switch (command[0]) {
@@ -141,6 +142,7 @@ function response(room, msg, sender, isGroupChat, replier, imageDB, packageName)
          break;
    }
 }
+
 function insertCoin(y) {
    if (setting.map[0][y] == 0) {
       if (setting.map[5][y] != 0) {
@@ -160,6 +162,7 @@ function insertCoin(y) {
       return false;
    }
 }
+
 function mapBlock(num) {
    if (num != 0) {
       if (num == 1) {
@@ -171,6 +174,7 @@ function mapBlock(num) {
       return setting.block["0"];
    }
 }
+
 function checkAble(num) {
    if (num != null) {
       if (!isNaN(num)) {
@@ -186,12 +190,15 @@ function checkAble(num) {
       return 1;
    }
 }
+
 function getPlayerTurn() {
    return setting.player[setting.turn - 1];
 }
+
 function changeTurn() {
    setting.turn == 1 ? setting.turn = 2 : setting.turn = 1;
 }
+
 function mapPrint() {
    var mapResult = [];
    for (x = 0; x < 6; x++) {
@@ -213,6 +220,7 @@ function mapPrint() {
    }
    return setting.number + "\n" + mapResult.join("\n");
 }
+
 function resetGame() {
    setting.gameStart = false;
    setting.roomCreate = false;
@@ -227,10 +235,12 @@ function resetGame() {
       [0, 0, 0, 0, 0, 0, 0]
    ]
 }
+
 function winNumber() {
    var number = String(setting.turn);
    return number.repeat(4);
 }
+
 function VerticalCheckL() {
    let out = [];
    for (let i = 1 - setting.map.length; i < setting.map[0].length; i++) {
@@ -248,6 +258,7 @@ function VerticalCheckL() {
    }
    return false;
 }
+
 function mapVertical() {
    var mapV = [];
    for (x = 0; x < 6; x++) {
@@ -259,6 +270,7 @@ function mapVertical() {
    }
    return JSON.stringify(mapV);
 }
+
 function VerticalCheckR() {
    let mapV = JSON.parse(mapVertical());
    let out = [];
@@ -277,6 +289,7 @@ function VerticalCheckR() {
    }
    return false;
 }
+
 function GaroCheck() {
    var checkGaro = [];
    for (x = 0; x < 6; x++) {
@@ -293,6 +306,7 @@ function GaroCheck() {
    }
    return false;
 }
+
 function SeroCheck() {
    var checkSero = [];
    for (y = 0; y < 7; y++) {
@@ -309,6 +323,7 @@ function SeroCheck() {
    }
    return false;
 }
+
 function winCheck() {
    if (GaroCheck()) {
       return true;
