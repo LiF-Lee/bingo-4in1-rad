@@ -29,11 +29,15 @@
 • /포기    -    게임을 진행중 기권합니다.
 
 
+# [How to Use]
 
-# [Update Log]
+```teminal
+npm install
+```
+터미널에서 위 명령어를 윕력하여 필요한 모듈들을 설치합니다.
+한번만 해주시면 됩니다.
 
-• v1.0 - Release Version
-
-• v1.1 - Bug Fixed
-
-• v1.2 - Bug Fixed (Now)
+```teminal
+node run bingo
+```
+터미널에서 위 명령어를 입력하여 코드를 실행시켜주세요.
