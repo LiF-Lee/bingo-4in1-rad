@@ -32,4 +32,4 @@
 | Command         | Action                                      |
 |:----------------|:--------------------------------------------|
 | `npm install`   | Installs dependencies                       |
-| `node index`    | Starts Discord Bot                          |
+| `node bingo`    | Starts Discord Bot                          |
