@@ -29,15 +29,7 @@
 • /포기    -    게임을 진행중 기권합니다.
 
 
-# [How to Use]
-
-```teminal
-npm install
-```
-터미널에서 위 명령어를 입력하여 필요한 모듈들을 설치합니다.
-한번만 해주시면 됩니다.
-
-```teminal
-node run bingo
-```
-터미널에서 위 명령어를 입력하여 코드를 실행시켜주세요.
+| Command         | Action                                      |
+|:----------------|:--------------------------------------------|
+| `npm install`   | Installs dependencies                       |
+| `node index`    | Starts Discord Bot                          |
