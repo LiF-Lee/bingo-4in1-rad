@@ -223,7 +223,7 @@ function getPlayerTurn() {
  * 턴을 변경합니다.
  */
 function changeTurn() {
-    setting.turn == 1 ? setting.turn = 2 : setting.turn = 1;
+    setting.turn = (setting.turn === 2) ? 1 : 2;
 }
  
 /*
@@ -279,7 +279,7 @@ function winNumber() {
 /*
  * 가로 방향에 동전 4개가 이어져 있는지 확인합니다.
  */
-function GaroCheck() {
+function HorizontalCheck() {
     let result = [];
     let isWin = false;
     for (let i = 0; i < setting.map.length; i++)
@@ -295,7 +295,7 @@ function GaroCheck() {
 /*
  * 세로 방향에 동전 4개가 이어져 있는지 확인합니다.
  */
-function SeroCheck() {
+function VerticalCheck() {
     let dump = [[], [], [], [], [], [], []];
     let isWin = false;
     setting.map.forEach(element => {
@@ -313,7 +313,7 @@ function SeroCheck() {
 /*
  * 대각선 방향에 동전 4개가 이어져 있는지 확인합니다.
  */
-function VerticalCheck() {
+function DiagonalCheck() {
     let result = [[], []];
     let isWin = false;
     for (let i = 1 - setting.map.length; i < setting.map[0].length; i++) {
@@ -340,7 +340,7 @@ function VerticalCheck() {
  * 가로, 세로, 대각선 방향 중 동전 4개기 한 곳이라도 이어져 있다면 true를 반환합니다.
  */
 function winCheck() {
-    if (GaroCheck() || SeroCheck() || VerticalCheck())
+    if (HorizontalCheck() || VerticalCheck() || DiagonalCheck())
         return true;
     return false;
 }
