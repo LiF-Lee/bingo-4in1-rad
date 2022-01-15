@@ -43,133 +43,77 @@ client.on('messageCreate', function(message) {
 
     switch (command[0]) {
         case setting.cmd[0]:
-            if (!setting.roomCreate) {
-                setting.player.push(sender);
-                setting.roomCreate = true;
-                message.reply('방을 생성했습니다.');
-            } else {
-                message.reply('방이 이미 존재합니다.');
-            }
+            if (setting.roomCreate === true) { return message.reply('방이 이미 존재합니다.'); }
+            setting.player.push(sender);
+            setting.roomCreate = true;
+            message.reply('방을 생성했습니다.');
             break;
         case setting.cmd[1]:
-            if (setting.roomCreate) {
-                if (setting.player[1] == null) {
-                    if (setting.player[0] != sender) {
-                        setting.player.push(sender);
-                        setting.gameStart = true;
-                        message.reply('게임에 참여했습니다.\n\n' + setting.player[0] + ' [빨]\nvs\n' + setting.player[1] + ' [파]');
-                    } else {
-                        message.reply('중복 참여입니다.');
-                    }
-                } else {
-                    message.reply('방 인원이 꽉 찼습니다.');
-                }
-            } else {
-                message.reply('참여 가능한 방이 없습니다.');
-            }
+            if (setting.roomCreate === false) { return message.reply('참여 가능한 방이 없습니다.'); }
+            if (setting.player[1] !== null) { return message.reply('방 인원이 꽉 찼습니다.'); }
+            if (setting.player[0] === sender) { return message.reply('중복 참여입니다.'); }
+            setting.player.push(sender);
+            setting.gameStart = true;
+            message.reply(`게임에 참여했습니다.\n\n${setting.player[0]} [빨]\nvs\n${setting.player[1]} [파]`);
             break;
         case setting.cmd[2]:
-            if (setting.roomCreate) {
-                if (!setting.gameStart) {
-                    resetGame();
-                    message.reply('방을 삭제했습니다.');
-                } else {
-                    message.reply('게임이 진행중입니다.');
-                }
-            } else {
-                message.reply('삭제 가능한 방이 없습니다.');
-            }
+            if (setting.roomCreate === false) { return message.reply('삭제 가능한 방이 없습니다.'); }
+            if (setting.gameStart === true) { return message.reply('게임이 진행중입니다.'); }
+            resetGame();
+            message.reply('방을 삭제했습니다.');
             break;
         case setting.cmd[3]:
-            if (setting.roomCreate) {
-                if (setting.gameStart) {
-                    if (getPlayerTurn() == sender) {
-                        var check = checkAble(command[1]);
-                        switch (check) {
-                            case 4:
-                                var insert = insertCoin(command[1] - 1);
-                                if (insert) {
-                                    if (checkDraw()) {
-                                        message.reply(mapPrint());
-                                        message.reply('무승부입니다. 게임을 종료합니다.');
-                                        resetGame();
-                                    } else {
-                                        var result = mapPrint() + '\n\n다음턴: ';
-                                        message.reply(result + getPlayerTurn());
-                                    }
-                                } else {
-                                    message.reply('들어갈 수 없는 위치입니다.');
-                                }
-                                break;
-                            case 3:
-                                message.reply('1~7 사이의 자연수만 입력해주세요.');
-                                break;
-                            case 2:
-                                message.reply('자연수만 입력해주세요.');
-                                break;
-                            case 1:
-                                message.reply('숫자를 입력해주세요.');
-                                break;
-                        }
-                    } else {
-                        message.reply(getPlayerTurn() + '님의 차례입니다.');
+            if (setting.roomCreate === false) { return message.reply('방을 먼저 생성하세요.'); }
+            if (setting.gameStart === false) { return message.reply('참여 인원이 부족합니다.'); }
+            if (getPlayerTurn() !== sender) { return message.reply(`${getPlayerTurn()}님의 차례입니다.`); }
+            switch (checkAble(command[1]))
+            {
+                case 1:
+                    message.reply('숫자를 입력해주세요.');
+                    break;
+                case 2:
+                    message.reply('자연수만 입력해주세요.');
+                    break;
+                case 3:
+                    message.reply('1~7 사이의 자연수만 입력해주세요.');
+                    break;
+                case 4:
+                    if (insertCoin(command[1] - 1) === false) { return message.reply('들어갈 수 없는 위치입니다.'); }
+                    if (checkDraw()) 
+                    {
+                        message.reply(mapPrint());
+                        message.reply('무승부입니다. 게임을 종료합니다.');
+                        return resetGame();
                     }
-                } else {
-                    message.reply('참여 인원이 부족합니다.');
-                }
-            } else {
-                message.reply('방을 먼저 생성하세요.');
+                    message.reply(`${mapPrint()}\n\n다음턴: ${getPlayerTurn()}`);
+                    break;
             }
-            break;
         case setting.cmd[4]:
-            if (setting.roomCreate) {
-                if (setting.gameStart) {
-                    if (getPlayerTurn() == sender) {
-                        var checkWin = winCheck();
-                        if (checkWin) {
-                            resetGame();
-                            message.reply(sender + '님의 승리입니다.');
-                        } else {
-                            message.reply('지금은 빙고를 외칠 수 없습니다.');
-                        }
-                    } else {
-                        message.reply(getPlayerTurn() + '님의 차례입니다.');
-                    }
-                } else {
-                    message.reply('참여 인원이 부족합니다.');
-                }
-            } else {
-                message.reply('방을 먼저 생성하세요.');
-            }
+            if (setting.roomCreate === false) { return message.reply('방을 먼저 생성하세요.'); }
+            if (setting.gameStart === false) { return message.reply('참여 인원이 부족합니다.'); }
+            if (getPlayerTurn() !== sender) { return message.reply(`${getPlayerTurn()}님의 차례입니다.`); }
+            if (winCheck() === false) { return message.reply('지금은 빙고를 외칠 수 없습니다.'); }
+            resetGame();
+            message.reply(`${sender}님의 승리입니다.`);
             break;
         case setting.cmd[5]:
-            if (setting.roomCreate) {
-                if (setting.gameStart) {
-                    if (getPlayerTurn() == sender) {
-                        resetGame();
-                        message.reply(sender + '님이 기권하셨습니다.');
-                    } else {
-                        message.reply(getPlayerTurn() + '님의 차례입니다.');
-                    }
-                } else {
-                    message.reply('참여 인원이 부족합니다.');
-                }
-            } else {
-                message.reply('방을 먼저 생성하세요.');
-            }
+            if (setting.roomCreate === false) { return message.reply('방을 먼저 생성하세요.'); }
+            if (setting.gameStart === false) { return message.reply('참여 인원이 부족합니다.'); }
+            if (getPlayerTurn() !== sender) { return message.reply(`${getPlayerTurn()}님의 차례입니다.`); }
+            resetGame();
+            message.reply(`${sender}님이 기권하셨습니다.`);
             break;
     }
-
 });
 
 /*
  * 인자 y로 받은 위치에 동전을 넣을 수 있는지 확인 후 넣을 수 있으면 넣은 뒤, true 리턴
  */
 function insertCoin(y) {
-    if (setting.map[0][y] == 0) {
-        if (setting.map[5][y] != 0) {
+    if (setting.map[0][y] === 0) {
+        if (setting.map[5][y] !== 0) {
             for (x = 0; x < 6; x++) {
-                if (setting.map[x][y] != 0) {
+                if (setting.map[x][y] !== 0) {
                     setting.map[x - 1][y] = setting.turn;
                     changeTurn();
                     break;
@@ -189,8 +133,8 @@ function insertCoin(y) {
  * 맵 출력시 사용됩니다.
  */
 function mapBlock(num) {
-    if (num != 0) {
-        if (num == 1) {
+    if (num !== 0) {
+        if (num === 1) {
             return setting.block[1];
         }
         return setting.block[2];
@@ -202,7 +146,7 @@ function mapBlock(num) {
  * 입력 받은 숫자가 1~7 사이의 숫자인지 확인합니다.
  */
 function checkAble(num) {
-    if (num != null) {
+    if (num !== null) {
         if (!isNaN(num)) {
             if (0 < num < 8) { return 4; }
             return 3;
@@ -286,8 +230,7 @@ function HorizontalCheck() {
         result.push(setting.map[i].join(''));
 
     result.forEach(element => {
-        if (element.includes(winNumber()))
-            isWin = true;
+        if (element.includes(winNumber())) { isWin = true; }
     });
     return isWin;
 }
@@ -304,8 +247,7 @@ function VerticalCheck() {
         });
     });
     dump.forEach(element => {
-        if (element.join('').includes(winNumber()))
-            isWin = true;
+        if (element.join('').includes(winNumber())) { isWin = true; }
     });
     return isWin;
 }
@@ -340,8 +282,7 @@ function DiagonalCheck() {
  * 가로, 세로, 대각선 방향 중 동전 4개기 한 곳이라도 이어져 있다면 true를 반환합니다.
  */
 function winCheck() {
-    if (HorizontalCheck() || VerticalCheck() || DiagonalCheck())
-        return true;
+    if (HorizontalCheck() || VerticalCheck() || DiagonalCheck()) { return true; }
     return false;
 }
  
@@ -350,11 +291,9 @@ function winCheck() {
  */
 function checkDraw() {
     for (y = 0; y < setting.map[0].length; y++) {
-        if (setting.map[0][y] === 0)
-            return false;
+        if (setting.map[0][y] === 0) { return false; }
     }
-    if (winCheck())
-        return false;
+    if (winCheck()) { return false; }
     return true;
 }
 
